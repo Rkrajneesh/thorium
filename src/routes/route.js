@@ -7,7 +7,7 @@ router.post('/players', function (req, res) {
     let playerName = player.name;
     for (let i = 0; i < players.length; i++) {
         if (players[i].name == playerName)
-            res.send('Player already exists');
+           return res.send('Player already exists');
     }
     players.push(player);
     res.send(players);
