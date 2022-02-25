@@ -12,7 +12,7 @@ router.post('/players', function (req, res) {
     players.push(player);
     res.send(players);
 })
-
+//2nd problem
 router.post('/players/:playerName/bookings/:bookingId', function (req, res) {
     let name = req.params.playerName;
     let isPlayerPresent = false;
@@ -37,5 +37,6 @@ router.post('/players/:playerName/bookings/:bookingId', function (req, res) {
     }
     res.send(players);
 })
+//done
 
 module.exports = router;
