@@ -1,46 +1,63 @@
 const { count } = require("console")
-const BookModel= require("../models/bookModel")
+const AuthorModel= require("../models/newAuthor")
+const PublisherModel= require("../models/newPublisher")
+const BookModel= require("../models/newBook")
+
+const createAuthor = async function (req, res) {
+    let Adata= req.body
+    let savedAuthor= await AuthorModel.create(Adata)
+    res.send({msg: savedAuthor})
+}
+
+const createPublisher= async function (req, res) {
+    let Pdata= req.body
+    let savedPublisher= await PublisherModel.create(Pdata)
+    res.send({msg: savedPublisher})}
 
 const createBook= async function (req, res) {
-    let data= req.body
+        let book = req.body
+        let authorId = book.author
+        let publisherId = book.publisher
+    
+        //validation a
+        if(!authorId) return res.send('The request is not valid as the author details are required.')
+    
+        //validation b
+        let author = await AuthorModel.findById(authorId)
+        if(!author) return res.send('The request is not valid as no author is present with the given author id')
+    
+        //validation c
+        if(!publisherId) return res.send('The request is not valid as the publisher details are required.') 
+    
+        //validation d
+        let publisher = await PublisherModel.findById(publisherId)
+        if(!publisher) return res.send('The request is not valid as no publisher is present with the given publisher id')
+    
+        let bookCreated = await BookModel.create(book)
+        return res.send({data: bookCreated})
+    }
+    
+        // let savedBook= await BookModel.create(data)
+        // res.send({msg: savedBook})}
 
-    let savedData= await BookModel.create(data)
-    res.send({msg: savedData})
-}
+        
+const getBook= async function (req, res) {
+    let savedBook= await BookModel.find().populate('author publisher')
+    res.send({msg: savedBook})}
+        
+        
+module.exports.createAuthor= createAuthor
+module.exports.createPublisher= createPublisher        
+module.exports.createBook= createBook
+module.exports.getBook = getBook
 
-const getBooksData= async function (req, res) {
-    let allBooks= await BookModel.find( {authorName : "HO" } )
-    console.log(allBooks)
-    if (allBooks.length > 0 )  res.send({msg: allBooks, condition: true})
-    else res.send({msg: "No books found" , condition: false})
-}
+// const getBooksData= async function (req, res) {
+//     let allBooks= await BookModel.find( {authorName : "HO" } )
+//     console.log(allBooks)
+//     if (allBooks.length > 0 )  res.send({msg: allBooks, condition: true})
+//     else res.send({msg: "No books found" , condition: false})
+// }
 
-
-const updateBooks= async function (req, res) {
-    let data = req.body // {sales: "1200"}
-    // let allBooks= await BookModel.updateMany( 
-    //     { author: "SK"} , //condition
-    //     { $set: data } //update in data
-    //  )
-    let allBooks= await BookModel.findOneAndUpdate( 
-        { authorName: "ABC"} , //condition
-        { $set: data }, //update in data
-        { new: true , upsert: true} ,// new: true - will give you back the updated document // Upsert: it finds and updates the document but if the doc is not found(i.e it does not exist) then it creates a new document i.e UPdate Or inSERT  
-     )
-     
-     res.send( { msg: allBooks})
-}
-
-const deleteBooks= async function (req, res) {
-    // let data = req.body 
-    let allBooks= await BookModel.updateMany( 
-        { authorName: "FI"} , //condition
-        { $set: {isDeleted: true} }, //update in data
-        { new: true } ,
-     )
-     
-     res.send( { msg: allBooks})
-}
 
 
 
@@ -53,7 +70,3 @@ const deleteBooks= async function (req, res) {
 
 
 
-module.exports.createBook= createBook
-module.exports.getBooksData= getBooksData
-module.exports.updateBooks= updateBooks
-module.exports.deleteBooks= deleteBooks
