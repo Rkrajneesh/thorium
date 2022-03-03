@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const AuthorSchema = new mongoose.Schema( {
     authorName : String,
     age : Number,
-    address : String
+    address : String,
+    rating: Number
 })
 
 
