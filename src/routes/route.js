@@ -55,8 +55,8 @@ router.get("/getUserDocument", UserController.getUsersData)
 router.post("/productDocumnet",task1, ProductController.ProductData  )
 router.get("/getProdectDocument", ProductController.getProductData)
 
-router.post("/orderDocumnet",task2, OrderController.OrderData)
-router.get("/getOrderDocumnet", OrderController.getOrderData)
+router.post("/orderDocumnet",task1, OrderController.createOrder)
+// router.get("/getOrderDocumnet", OrderController.getOrderData)
 
 
 module.exports = router;
