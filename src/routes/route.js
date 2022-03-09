@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const userController= require("../controllers/userController");
-const { tokenCheck } = require('../middleware/auth');
+const tokenCheckk = require('../middleware/auth');
 
 
 
 router.post("/createUser", userController.createUser  )
 router.post("/loginUser", userController.loginUser)
-router.get("/users/:userId", tokenCheck, userController.getUserData)
-router.put("/users/:userId", tokenCheck, userController.updateUser)
-router.delete("/users/:userId", tokenCheck, userController.deleteData)
-
+router.get("/users/:userId", tokenCheckk.tokenCheck, userController.getUserData)
+router.put("/users/:userId", tokenCheckk.tokenCheck,tokenCheckk.authCheck, userController.updateUser)
+router.delete("/users/:userId", tokenCheckk.tokenCheck,tokenCheckk.authCheck, userController.deleteData)
+router.post("/userss/:userId",tokenCheckk.tokenCheck,tokenCheckk.authCheck,userController.postMessage)
 module.exports = router;
+
+//,tokenCheckk.tokenCheck

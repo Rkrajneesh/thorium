@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
-const tokenCheck= require("../middleware/auth");
+const tokenCheck = require("../middleware/auth");
 
 const createUser = async function (req, res) {
   let data = req.body;
@@ -20,7 +20,13 @@ const loginUser = async function (req, res) {
     });
 
   let token = jwt.sign(
-    { userId: user._id.toString(), batch: "thorium", organisation: "FUnctionUp", },"functionup-thorium");
+    {
+      userId: user._id.toString(),
+      batch: "thorium",
+      organisation: "FUnctionUp",
+    },
+    "functionup-thorium"
+  );
   res.send({ status: true, data: token });
 };
 
@@ -38,29 +44,46 @@ const getUserData = async function (req, res) {
   res.send({ status: true, data: userDetails });
 };
 
-
 const updateUser = async function (req, res) {
   let userId = req.params.userId;
   let user = await userModel.findById(userId);
-  
+
   if (!user) {
     return res.send("No such user exists");
   }
 
   let userData = req.body;
-  let updatedUser = await userModel.findOneAndUpdate({ _id: userId }, userData, {$new:true});
+  let updatedUser = await userModel.findOneAndUpdate(
+    { _id: userId },
+    userData,
+    { $new: true }
+  );
   res.send({ data: updatedUser });
 };
 
-const deleteData = async function (req,res) {
+const deleteData = async function (req, res) {
   let userId = req.params.userId;
-  let deletedUser= await userModel.findOneAndUpdate({_id:userId},{$set:{isDeleted : true}}, {$new:true});
-  res.send({ data : deletedUser});
+  let deletedUser = await userModel.findOneAndUpdate(
+    { _id: userId },
+    { $set: { isDeleted: true } },
+    { $new: true }
+  );
+  res.send({ data: deletedUser });
+};
 
-}
+
+const postMessage = async function (req, res) {
+ let userId = req.body.userId
+ let upDatedPosts =req.body 
+ let updatedUser = await userModel.findOneAndUpdate({_id: userId},upDatedPosts, {$new: true})
+ res.send({status: true, data: updatedUser})
+ }
+
+
 
 module.exports.createUser = createUser;
 module.exports.getUserData = getUserData;
 module.exports.updateUser = updateUser;
 module.exports.loginUser = loginUser;
 module.exports.deleteData = deleteData;
+module.exports.postMessage = postMessage;
