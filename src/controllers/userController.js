@@ -1,11 +1,19 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 const tokenCheck = require("../middleware/auth");
+const { send } = require("express/lib/response");
 
 const createUser = async function (req, res) {
+  try{
   let data = req.body;
+  if(Object.keys(data).length >0){
   let savedData = await userModel.create(data);
   res.send({ msg: savedData });
+  res.status(201).send({msg :savedData})
+  }else{res.status(400).send("Bad Request")}
+  }catch(error){
+    res.status(500).send({msg:"Error",error:error.message})
+  }
 };
 
 const loginUser = async function (req, res) {
