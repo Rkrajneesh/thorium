@@ -1,6 +1,8 @@
 const { count } = require("console")
 const BlogModel = require("../models/blogModel")
 const AuthorModel = require("../models/authorModel")
+const jwt = require("jsonwebtoken")
+const middleware = require("../middleware/mw")
 
 
 const createBlog = async function (req, res) {
@@ -124,13 +126,32 @@ const Qdeleted = async function (req, res) {
     }
 };
 
+const loginUser = async function (req, res) {
+    let userName = req.body.email;
+    let password = req.body.password;
+let user = await BlogModel.findOne({ emailId: userName, password: password });
+if (!user)
+  return res.send({
+    status: false,
+    msg: "username or the password is not corerct",
+  });
+
+let token = jwt.sign(
+  {
+    userId: user._id.toString(),
+    batch: "thorium",
+    organisation: "FUnctionUp",
+  },
+  "functionup-thorium"
+);
+res.send({ status: true, data: token });
+};
 
 
 
 
 
-
-
+module.exports.loginUser = loginUser
 module.exports.createBlog = createBlog
 module.exports.updateBlog = updateBlog
 module.exports.deleted = deleted
