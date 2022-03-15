@@ -6,7 +6,7 @@ const AuthorModel = require("../models/authorModel")
 const createBlog = async function (req, res) {
     try {
         let data = req.body
-        let id = req.body.authorId
+       let id = req.body.authorId
         // checking if data is empty
         if (Object.keys(data) == 0)
             // returning 400 {bad request data is empty}
